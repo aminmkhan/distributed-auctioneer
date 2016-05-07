@@ -1,0 +1,279 @@
+%% preamable.sty
+
+
+% Flags to control LaTeX compilation
+\usepackage{iftex} % For checking pdfLaTeX or XeLaTeX
+\usepackage{etoolbox} % For using condition flags
+\usepackage{Template/flags} % For toggling different features
+\usepackage{Template/todos} % For reviews commands
+
+% Variant C: geometry, larger vertical scale, larger ratio top:bottom margin
+%\usepackage[hscale=0.75,vscale=0.85,vmarginratio={2:3},heightrounded]{geometry}
+
+
+% Some very useful LaTeX packages include:
+% (uncomment the ones you want to load)
+
+
+% *** MISC UTILITY PACKAGES ***
+%
+
+
+% *** CITATION PACKAGES ***
+%
+\usepackage{cite}
+% cite.sty was written by Donald Arseneau
+
+
+
+
+% *** GRAPHICS RELATED PACKAGES ***
+%
+
+%\usepackage[pdftex]{graphicx}
+\usepackage{graphicx}  % XeLaTeX
+% declare the path(s) where your graphic files are
+\graphicspath{{Images/}}
+% and their extensions so you won't have to specify these with
+% every instance of \includegraphics
+\DeclareGraphicsExtensions{.pdf,.jpeg,.png,.jpg}
+% graphicx was written by David Carlisle and Sebastian Rahtz. It is
+% required if you want graphics, photos, etc. 
+
+%% For including figures, graphicx.sty has been loaded in
+%% elsarticle.cls. If you prefer to use the old commands
+%% please give \usepackage{epsfig}
+
+
+% *** MATH PACKAGES ***
+%
+\usepackage[cmex10]{amsmath}
+%\usepackage{unicode-math}  % XeLaTeX
+% A popular package from the American Mathematical Society that provides
+% many useful and powerful commands for dealing with mathematics. 
+
+%% The amssymb package provides various useful mathematical symbols
+%\usepackage{amssymb}
+%% The amsthm package provides extended theorem environments
+%\usepackage{amsthm}
+
+
+% *** SPECIALIZED LIST PACKAGES ***
+%
+%\usepackage{algorithmic}
+% algorithmic.sty was written by Peter Williams and Rogerio Brito.
+% This package provides an algorithmic environment fo describing algorithms.
+
+\usepackage{algorithm}
+
+% Other packages for algorithms
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+
+% *** ALIGNMENT PACKAGES ***
+%
+%\usepackage{array}
+% Frank Mittelbach's and David Carlisle's array.sty patches and improves
+% the standard LaTeX2e array and tabular environments to provide better
+% appearance and additional user controls. 
+
+
+%\usepackage{mdwmath}
+%\usepackage{mdwtab}
+% Also highly recommended is Mark Wooding's extremely powerful MDW tools,
+% especially mdwmath.sty and mdwtab.sty which are used to format equations
+% and tables, respectively. 
+
+
+
+%\usepackage{eqparbox}
+% Also of notable interest is Scott Pakin's eqparbox package for creating
+% (automatically sized) equal width boxes - aka "natural width parboxes".
+% Available at:
+% http://www.ctan.org/tex-archive/macros/latex/contrib/eqparbox/
+
+
+
+
+
+% *** SUBFIGURE PACKAGES ***
+%\usepackage[tight,footnotesize]{subfigure}
+% subfigure.sty was written by Steven Douglas Cochran. This package makes it
+% easy to put subfigures in your figures. e.g., "Figure 1a and 1b". 
+
+
+%\usepackage[caption=false]{caption}
+%\captionsetup{font=scriptsize,labelfont=scriptsize}
+%\usepackage[font=footnotesize]{subfig}
+% subfig.sty, also written by Steven Douglas Cochran, is the modern
+% replacement for subfigure.sty. 
+
+
+%% The lineno packages adds line numbers. Start line numbering with
+%% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
+%% for the whole article with \linenumbers.
+%% \usepackage{lineno}
+
+
+% *** FLOAT PACKAGES ***
+%
+\usepackage{fixltx2e}
+% fixltx2e, the successor to the earlier fix2col.sty, was written by
+% Frank Mittelbach and David Carlisle. This package corrects a few problems
+% in the LaTeX2e kernel, the most notable of which is that in current
+% LaTeX2e releases, the ordering of single and double column floats is not
+% guaranteed to be preserved. 
+
+
+%\usepackage{stfloats}
+% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
+% the ability to do double column floats at the bottom of the page as well
+% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in LaTeX2e). 
+
+
+% *** PDF, URL AND HYPERLINK PACKAGES ***
+%
+\iftoggle{enable_hyperlinks} { %%%
+	\usepackage{url}
+	% url.sty was written by Donald Arseneau. It provides better support for
+	% handling and breaking URLs.
+}
+
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor infra-struc-ture}
+
+%%%%%%%%%% our custom headers %%%%%%%%%%
+
+%%%%%   FONTS AND UNICODE (PDFLATEX)   %%%%%
+\ifPDFTeX
+	\RequirePDFTeX
+
+	\usepackage[utf8]{inputenc} 
+	\usepackage[T1]{fontenc} 
+	\usepackage[english]{babel}
+	\usepackage{textcomp}
+	\usepackage[autostyle]{csquotes} % for double quotes. e.g. use \enquote{This is a quotation!}
+	\usepackage[ % microtype
+		activate={true, nocompatibility}, % activate protrusion and expansion
+		final, % enable microtype; use "draft" to disable
+		tracking=true,
+		kerning=true,
+		spacing=true,
+		factor=1100, % add 10% to the protrusion amount (default is 1000)
+		stretch=10, % reduce stretchability/shrinkability (default is 20/20)
+		shrink=10]
+		{microtype}
+
+	\iftoggle{fancy_fonts} { %%%
+		% Use any one of the following at a time!
+%		\usepackage{lmodern}
+%		\usepackage{times}
+		\usepackage{pxfonts} % Platino font
+%		\usepackage{txfonts} % Times font
+	} %%% \iftoggle{fancy_fonts}
+
+	\pdfminorversion=7
+
+\fi % \ifPDFTeX %%%%%%%%%%
+
+% for better table output
+\usepackage{multirow}
+\usepackage{booktabs}
+
+
+
+\iftoggle{enable_hyperlinks} { %%%
+% For URLs and PDF properties
+	\usepackage[ % HYPERREF
+		pdfauthor={},%
+	    pdftitle = {},%
+	    %
+	    hyperfigures, hyperindex, breaklinks, linktocpage, bookmarksnumbered, bookmarks, %
+	%   citecolor=blue,urlcolor=blue,linkcolor=blue, %
+	%   pagebackref = true, % this includes back ref in bibliography (conflicts with BibLaTeX)
+	%   backref = true, % this includes back ref in bibliography (conflicts with BibLaTeX)
+		hidelinks%
+	%	pdftex
+		] {hyperref}
+	
+	\usepackage{bookmark}
+	
+	\iftoggle{fancy_fonts} { %%%
+		\urlstyle{tt} %options: tt	rm	sf	same
+		\renewcommand{\UrlFont}{\small\tt}
+	}
+}{ %%% else
+    \usepackage{url}
+%   \urlstyle{tt}
+%   \renewcommand{\UrlFont}{\small\tt}
+	% IEEE submission doesn't allow \url so placeholder dummy command for that
+%	\newcommand{\url}[1] {#1}
+} %%% \iftoggle{enable_hyperlinks}
+
+% Harvard or IEEE style citations
+\iftoggle{enable_biblatex} { %%%
+
+	\usepackage[ % BibLaTeX
+		sorting=none, %
+		style=ieee, % {Options: numeric-comp, ieee}
+		doi=false, %
+		isbn=false, %
+		url=false,
+		eprint=false,
+%		backref = true, % include back references in bibliography
+		maxcitenames=7,
+		maxbibnames=7,
+		hyperref=true,
+		block=none,
+		backend=biber % {Options: bibtex, biber}
+		]{biblatex}
+
+	\DefineBibliographyStrings{english}{%
+	    backrefpage  = {see p.}, % for single page number
+	    backrefpages = {see pp.} % for multiple page numbers
+	}    
+
+	\bibliography{\bibfilepath} % path given in flags.sty
+
+	%\let\cite\parencite % uncomment to use (Author Year) format in text
+	
+} %%% \iftoggle{enable_biblatex}
+
+\iftoggle{enable_headings} { %%%
+	% For page numbers 
+
+	\makeatletter
+	\def\ps@headings{%
+		\def\@oddhead{\mbox{}\scriptsize\rightmark \hfil \thepage}%
+		\def\@evenhead{\scriptsize\thepage \hfil \leftmark\mbox{}}%
+		\def\@oddfoot{}%
+		\def\@evenfoot{}}
+	\makeatother
+	\pagestyle{headings}
+	
+	% For page numbers (KOMA Script)
+%	\usepackage{scrpage2}  
+%	\pagestyle{scrheadings}
+} %%% \iftoggle{enable_headings}
+
+% For footnotes in tables
+%\usepackage{tablefootnote}
+
+\iftoggle{enable_color} { %%%
+	% For colors (comment below, already loaded elsewhere)
+	%\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+	
+	% For highlighting 
+	\usepackage{soul}
+} %%% \iftoggle{enable_color}
+
+% For IEEE equations (if document class different from IEEEtran)
+%\usepackage{Template/IEEEtrantools}
+
+%%%%%   SPECIAL SYMBOLS   %%%%%
+\usepackage{bbding}
+\usepackage{wasysym}
+\usepackage[gen]{eurosym} % Options: official, gen

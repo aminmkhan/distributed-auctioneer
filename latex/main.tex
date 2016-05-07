@@ -1,0 +1,102 @@
+%% main.tex
+%% starting point for processing LaTeX document
+
+% Select the format for LaTeX document
+\input{Template/ieee-format}
+
+% Load custom packages
+\usepackage{Template/preamable}
+
+% Command to specify language for spell checking
+% !TeX spellcheck = en_GB
+
+%%%%% Document start here %%%%%
+
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{property}{Property}
+\newtheorem{definition}{Definition}
+
+\newcommand{\A}{\mathcal{A}}
+\newcommand{\commentout}[1]{}
+
+\begin{document}
+%
+\bstctlcite{IEEEexample:BSTcontrol} % commands to IEEE BST file
+
+% paper title
+\input{title}
+
+% make the title area
+\maketitle
+
+
+% ABSTRACT
+\input{abstract}
+
+
+%% *** TABLE OF CONTENTS
+%\setcounter{tocdepth}{2} % To include subsections in the TOC, pass 2
+%\tableofcontents
+%\newpage
+
+%% *** Introduction
+\input{introduction}
+
+% *** Section: Related Work
+\input{related-work}
+
+% *** Section: Background
+%\input{background}
+
+%% *** Section: Model
+\input{model}
+
+%% *** Section: Proposal
+\input{design} 
+
+%% *** Section: Case Study
+\input{casestudy} 
+
+% *** Section: Evaluation
+\input{evaluation} 
+
+% *** Section: Discussion
+%\input{discussion}
+
+% *** Section: Conclusion
+\input{conclusion}
+
+% *** Acknowledgement
+\input{acknowledgement}
+
+%\vspace{2.5mm}
+%
+%The full paper is available at 
+%{\small\texttt{\url{aminmkhan.github.io/distributed-auctioneer}}}.
+
+% *** References section
+
+\iftoggle{enable_biblatex} { %%%
+
+	\iftoggle{bibliography_small_font} { %%%
+		\renewcommand{\bibfont}{\normalfont\footnotesize}
+	} %%% \iftoggle{bibliography_small_font}
+	
+	\printbibliography
+	
+}{ %%% else	
+%	\def\IEEEbibitemsep{2.5pt plus .5pt} % Revert spacing introduced by compsoc option
+	
+	\bibliographystyle{\bibstylefile} % path given in flags.sty
+	\bibliography{Bibliography/references} % path given in flags.sty
+} %%% \iftoggle{enable_biblatex}
+
+
+% *** Appendix
+%\clearpage
+\input{appendix}
+
+% that's all folks
+\end{document}

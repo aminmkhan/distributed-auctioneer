@@ -1,0 +1,71 @@
+
+% flags
+
+%%%%%%%%%% Flags Definitions %%%%%%%%%%
+
+\newtoggle{prepare_camera_ready}	% Remove any extra customisations, prepare camera ready version
+
+\newtoggle{fancy_fonts} 			% Conditionally include fancy fonts 
+\newtoggle{fancy_header_fonts} 		% Conditionally include fancy fonts for headings, sans and mono 
+\newtoggle{bibliography_small_font} % Use smaller font for bibliography
+
+\newtoggle{blind_review}			% Hide details for blind review
+
+\newtoggle{enable_xelatex}			% Use XeLaTeX for compilation
+
+\newtoggle{enable_hyperlinks}		% Use hyperref and url packages
+\newtoggle{enable_biblatex}			% Use biblatex for bibliography
+\newtoggle{enable_todo}				% Show todo notes
+\newtoggle{enable_color}			% Use colors and highlighting etc
+\newtoggle{enable_headings}			% Use page numbers etc 
+
+%%%%%%%%%% Uncomment to enable flag settings %%%%%%%%%%
+
+%\global\toggletrue{prepare_camera_ready}
+%\global\toggletrue{blind_review} 
+
+%\global\toggletrue{fancy_fonts} 
+%\global\toggletrue{fancy_header_fonts}
+%\global\toggletrue{bibliography_small_font}
+
+\global\toggletrue{enable_hyperlinks}
+%\global\toggletrue{enable_biblatex}
+%\global\toggletrue{enable_todo}
+%\global\toggletrue{enable_color}
+\global\toggletrue{enable_headings}
+
+%\global\toggletrue{enable_xelatex}
+
+
+%%%%%%%%%%%%%%%%%%%% CAMERA READY PREPARATION %%%%%%%%%%%%%%%%%%%
+\iftoggle{prepare_camera_ready} { %%%
+
+	\RequirePDFTeX % No XeLaTeX etc
+	
+	\global\togglefalse{fancy_fonts} % No fancy fonts
+	\global\togglefalse{fancy_header_fonts} % No fancy fonts
+	\global\togglefalse{bibliography_small_font}
+	
+	\global\togglefalse{blind_review} % Include authors information
+	
+	\global\togglefalse{enable_xelatex}
+	
+	\global\togglefalse{enable_hyperlinks}
+	\global\togglefalse{enable_biblatex}
+	\global\togglefalse{enable_todo}
+	\global\togglefalse{enable_color}
+	\global\togglefalse{enable_headings}
+	
+	\renewcommand{\bibfilepath}{Bibliography/references} % load bib file from local directory
+}{ %%% else
+}
+
+%%%%%%%%%% Some string commands %%%%%%%%%% 
+
+%%% Specify location for bibliography file
+\newcommand{\bibfilepath}{references} 
+\renewcommand{\bibfilepath}{../../Mendeley-Bibliography/library} %% some global bibtex file
+\renewcommand{\bibfilepath}{Bibliography/references} %% in local working directory
+
+%%% Specify location for bibtex template style file
+\newcommand{\bibstylefile}{Template/IEEEtranBST/IEEEtran} 

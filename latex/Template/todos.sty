@@ -1,0 +1,67 @@
+
+
+%%%% Revision commands  %%%%%%%%%
+
+\usepackage[colorinlistoftodos,prependcaption,textsize=small]{todonotes}
+
+%nottoggle{enable_todo} {\PassOptionsToPackage{disable}{todonotes}}{}
+
+%TODO remove set length after finished
+%TODO disable as in \thiswillnotshow command
+\setlength{\marginparwidth}{2cm}
+\usepackage{xargs}                      % Use more than one optional parameter in a new commands
+
+
+%\newcommandx{\inl}[3][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1,inline]{\emph{#2}: #3}}
+
+\newcommandx{\majorin}[3][1=]{\todo[inline,linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{\emph{#2}: #3}}
+\newcommandx{\minorin}[3][1=]{\todo[inline,linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{\emph{#2}: #3}}
+\newcommandx{\major}[3][1=]{\todo[linecolor=red,backgroundcolor=red!25,bordercolor=red,#1]{\emph{#2}: #3}}
+\newcommandx{\minor}[3][1=]{\todo[linecolor=blue,backgroundcolor=blue!25,bordercolor=blue,#1]{\emph{#2}: #3}}
+\newcommandx{\mycomment}[3][1=]{\todo[linecolor=green,backgroundcolor=green!25,bordercolor=green,#1]{\emph{#2}: #3}}
+\newcommandx{\mycommentin}[3][1=]{\todo[inline,linecolor=green,backgroundcolor=green!25,bordercolor=green,#1]{\emph{#2}: #3}}
+
+\newcommandx{\thiswillnotshow}[2][1=]{\todo[disable,#1]{#2}}
+%
+
+%\newcommand\todo[1]{\bigskip\textcolor{red}{\emph{TODO} #1}\bigskip}
+%\newcommand\todo[1]{}
+
+%\newcommand\instruc[1]{\bigskip\textcolor{blue}{\emph{INSTRUCTIONS} #1}\bigskip}
+\newcommand\instruc[1]{}
+
+%\newcommand\note[1]{\bigskip\textcolor{green}{\emph{NOTE} #1}\bigskip}
+\newcommand\note[1]{}
+
+\newcommand*\comment[1]{\textcolor{blue}{#1}}
+%\newcommand\comment[2]{\textcolor{violet}{---\emph{COMMENT} #1 : #2---}}
+%\newcommand\comment[2]{}
+
+%\newcommand\sub[2]{(\textcolor{blue}{old:#1}) \textcolor{red}{#2}}
+%Revert all subs with following command
+%\newcommand\sub[2]{#1}
+%Update all subsno
+\newcommand\sub[2]{#2}
+%Disable a specific sub
+\newcommand\nosub[2]{#1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Alternate simpler implementation
+
+%\iftoggle{enable_todo} { %%%
+	% For TODOs	
+	%\usepackage{todonotes}	 %TODO Uncomment before final submission 
+	
+	%% For TODO Custom Macros for Comments %%
+%	\newcommand{\todo}[1]{\textcolor{red}{#1} \marginpar{\textcolor{red}{TODO}}}
+	
+	% Highlight some changes from last version
+%	\newcommand{\showdiff}[1]{ {\color{red} #1} }
+	
+%}{ %%% else
+	%% For TODO Custom Macros for Comments %%
+%	\newcommand{\todo}[1]{} %% This quickly removes all TODO notes!
+	
+%	\newcommand{\showdiff}[1]{ #1 } %% This quickly reverts the highlight color of the text
+%} %%% \iftoggle{enable_todo}

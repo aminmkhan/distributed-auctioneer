@@ -1,0 +1,20 @@
+
+% Section: CONCLUSION
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+Resource allocation is a fundamental problem in networked systems and the design of auction mechanisms that can provide properties such as
+truthfulness, budget balance, and maximal social welfare have been extensively studied in the literature. 
+These works assume a centralised trusted auctioneer that can faithfully execute the allocation algorithm. 
+Unfortunately, many networked systems of today, such as ``clouds of clouds'', edge clouds, and community networks, among others, lack a central trusted point of control. 
+In this paper we have addressed the theoretical and practical challenges that need to be overcome to bridge this gap. 
+More precisely, we have proposed a novel distributed framework for devising Nash equilibria 
+distributed simulations of the auctioneer that are resilient to asynchrony and coalitions. 
+Furthermore, our framework allows for the parallelisation of the allocation algorithm, 
+leveraging the distributed nature of the simulation, which is of paramount practical importance given that, 
+in many allocation algorithms, achieving maximal social welfare is computationally intensive. 
+We have devised implementations of the framework in a realistic testbed of one of the largest community networks deployed today, 
+and have gathered experimental evidence that the overhead of the emulation 
+is not significant even in the cases the allocation algorithm cannot be parallelised, 
+and brings substantial gains in the case parallelisation is possible. 
+This shows that our approach can be used as a building block to implement resource allocation in decentralized networks.

@@ -1,0 +1,146 @@
+
+
+% Section: INTRODUCTION
+\section{Introduction}
+\label{sec:introduction}
+
+Most distributed systems have limited resources that need to be shared by many nodes. 
+For instance, in a network there is limited bandwidth that needs to be allocated to multiple nodes. 
+In cloud applications, virtual machines (VMs) need to be allocated to different cloud users. 
+Resource allocation is, therefore, a key problem in distributed systems.
+
+Distributed resource allocation is particularly challenging when nodes
+operate under different spheres of control and may not be willing to cooperate. 
+Namely, a resource allocation strategy that assumes that all nodes 
+execute a given algorithm may break if nodes 
+may extract benefits by deviating from the expected behaviour.
+Many examples of this problem can be found in the literature. 
+The works of~\cite{Lee2007} and~\cite{Xiao2013} illustrate how
+a network user may attempt to monopolize the bandwidth utilization 
+if it has the opportunity. 
+There is evidence that programmers can instrument their code 
+to get an unfair advantage of several Unix schedulers~\cite{Grosu2005}. 
+In shared infrastructures, like Grid systems, participating
+users try to maximise their own usage to the detriment of 
+the others~\cite{Lai2004}.
+Dynamic wireless spectrum allocation suffers from unfair manipulation~\cite{Zhou2008}.
+Social cloud computing~\cite{Caton2014}, 
+and cooperative computing systems like BitTorrent~\cite{Liu2010}
+suffer when users act selfishly in consuming resources.
+
+
+An approach that has emerged as a viable alternative for the problem
+above is to use economic models to address resource allocation, in
+particular by resorting to auction systems~\cite{Riley1981}. 
+As a result, an extensive
+literature exists on the use of several types of auctions to perform
+resource allocation in distributed systems~\cite{Niyato2013, Lai2004, Waldspurger1992}. 
+In particular, the advent of the cloud computing model, where many
+clients may compete for the resources managed by one or more
+providers, has spurred the usage of different auction mechanisms in a
+variety of resource allocation proposals for the
+cloud~\cite{Popa2012, Niu2012, Wang:12, 
+Zhang:13, Shi:14, Zheng2014Star, Zhang:14, Zhang2015Truthful}.
+
+In these approaches, users are modelled as non-cooperative rational
+players who are willing to pay for using resources or get paid for
+providing those resources. Specifically, users declare to an
+auctioneer the preference for different allocations of resources, and
+the auctioneer executes some auction mechanism to derive an allocation
+between users and resources that maximises social welfare (preferences of users for the allocation),
+and the payments to be performed or
+received by each user. The aim is to obtain an allocation with a social welfare as close as
+possible to the optimal while ensuring truthfulness from the
+users, such that they do not have incentives to lie about their
+bids. In addition to maximal social welfare and truthfulness, other guarantees may be provided,
+including computational efficiency and budget balance (the
+payments made by the users outweigh the payments received).
+
+These works assume that the auctioneer is trusted.  Unfortunately,
+this is an unreasonable assumption in many of today's fully
+decentralized systems, where all nodes are either resource consumers,
+resource providers, or both. 
+In this case, there is no natural candidate that 
+can be trusted by all other nodes to run the auction
+algorithm faithfully, given that any node may extract some
+benefit by perturbing the auction result. In some sense, all current
+distributed systems that rely on auctions to perform resource
+allocation are not fully decentralized, because they depend on a
+unique central point of control, which is the trusted node that runs
+the auction algorithm. 
+%TODO @amin: Luis, please review this statement.
+This leads to the observation that there is
+still a substantial gap that needs to be bridged to apply these
+results in fully decentralized settings.
+
+This paper bridges this gap by proposing a framework of distributed
+protocols that allows multiple resource providers in a decentralized
+distributed system to simulate the role of the auctioneer.  Such simulation
+raises significant challenges both from the theoretical and practical
+points of view. From the theoretical perspective, although there is a
+vast literature of distributed fault-tolerant algorithms, with very
+few exceptions (for instance,~\cite{Abraham:13}), these works do not
+consider rational behaviour. From the practical perspective, the
+distribution of the auctioneer may incur in additional overhead. Our
+paper addresses both concerns. First, we prove that our distributed
+simulations are sound from a game theoretical
+perspective. Specifically, we show that the simulations are
+$k$-resilient (ex post) equilibria~\cite{Abraham:13}, i.e., Nash
+equilibria resilient to asynchrony and coalitions of providers of size
+at most $k$. Second, our protocols leverage the distributed nature of
+the resulting virtual trusted entity to parallelise the resource
+provisioning algorithm, compensating for the additional costs imposed
+by coordination. 
+
+We have implemented a prototype of our protocols and evaluated the
+resulting system in a real instance of a fully decentralized network,
+namely an experimental testbed for community networks~\cite{Braem2013}.  
+Different from the traditional
+business-focused model applied by telecommunication operators, each
+user in a community network is an owner of a portion of the total
+infrastructure, which builds the mesh network.
+Community networks are an interesting application scenario for
+our results  because they lack a central point of control and make
+extensive use of resource sharing. In particular, we consider the
+concrete problem of bandwidth reservation on the gateways that connect
+the community network to the Internet.  
+
+Even though in our example we only focus on bandwidth
+reservation, the fundamental problems at hand are general and emerge
+every time shared resources need to be allocated to users in a set of
+providers, such as for allocation of processing and memory resources
+as virtual machines in public clouds~\cite{Zhang2015Truthful},
+assignment of frequencies in secondary wireless spectrum
+markets~\cite{Zhou2008}, and resource scheduling in grid and cloud
+infrastructures\cite{Lai2004}.
+
+
+In summary, the main contributions of this paper are the following:
+
+\vspace{0.3mm}
+- We propose a framework for devising distributed protocols executed
+among a decentralized set of service providers that correctly simulate the
+auctioneer in a family of resource allocation auctions.
+
+\vspace{0.3mm}
+- We show that every implementation of the framework is a $k$-resilient (ex post) equilibrium.
+These implementations also tolerate users that send invalid bids.
+
+\vspace{0.3mm}
+- We show that it is possible to leverage the distributed nature of our framework to parallelise implementations,
+mitigating scalability issues of purely centralised solutions.
+
+\vspace{0.3mm}
+- We implemented instances of the framework and reported the results from its deployment on the actual Guifi nodes.
+
+\vspace{0.3mm} 
+
+The rest of the paper is organised as follows.  In
+Section~\ref{sec:related-work} we present related work.
+Section~\ref{sec:model} provides the system model.  In
+Section~\ref{sec:design}, we present the framework for simulating the
+auctioneer and in Section~\ref{sec:instances} we illustrate its
+applicability to the execution of two different auction mechanisms,
+with different computational properties, in the context of community networks.  In
+Section~\ref{sec:evaluation} we discuss results from the experiments.
+Section~\ref{sec:conclusion} concludes the paper.

@@ -1,0 +1,114 @@
+
+\section{Case Study}
+\label{sec:instances}
+
+In this paper, we use community networks as a concrete example of one of the many application areas for the distributed simulation of a trusted auctioneer.
+
+\subsection{Community Networks}
+Community networks are a bottom-up social initiative that provide Internet and networking services using off-the-shelf network hardware and the open, unlicensed wireless spectrum,
+with optical fibre in some cases,
+based on self-servicing and self-management by the users~\cite{Selimi2015Cloud}.  %~\cite{Baig2015Guifi}  ~\cite{Braem2013}
+Many of such initiatives have proven quite successful, and 
+	include AWMN in Greece, FunkFeuer in Austria, Freifunk in Germany, Ninux in Italy,
+and Guifi.net which is one of the largest community networks in the wold and connects more than 28,000 locations.
+
+Community networks are based on the principle of reciprocal sharing and most of their users are moved by altruistic principles. 
+However, as any other human organisation, these networks are not immune to overuse, free-riding, or under-provisioning, specially in scenarios where users may have motivations to compete for scarce resources. 
+In this paper, we consider the concrete problem of bandwidth reservation on the gateways that connect the community network to the Internet. 
+In particular, we consider that, as in most community networks, the subset of users that offer gateway services to the Internet is smaller than the complete set of users. 
+Users that are not at the gateways may be interested in reserving bandwidth in these gateways for Internet access.
+If the available bandwidth at each gateway is not enough to satisfy the demand, 
+one needs to implement some arbitration mechanism that optimally and fairly allocate resources, and at the same time maximises the resource utilisation and the provider's revenue. 
+
+In the context of our model (\S~\ref{sec:model}), \emph{providers} are the owners of the gateways, and have direct access to the Internet,
+while \emph{bidders} have no direct access to the Internet and rely on these gateways.
+The role of \emph{auctioneer} can be taken by one of the providers, or a chosen third party,
+or in the case of our proposed distributed auctioneer, simulated by some providers in a distributed fashion.
+We consider \emph{resource} to be the bandwidth external to the network available at the gateways.
+Note that we are not considering the bandwidth on the links internal to the community network,
+because network is operated in a shared manner, 
+and this bandwidth is collectively owned by the community.
+
+\subsection{Auctions For Bandwidth Allocation}
+
+We now show how our framework can be applied to two different bandwidth allocation problems in the context of community networks. For that purpose, we resort to two different 
+algorithms that have been proposed in the literature to solve bandwidth allocation of bidders in providers. These 
+algorithms rely on standard and double auctions respectively, and have different computational properties: the double auction algorithm 
+provides an example of a graph with only one task that is not computationally intensive, such that decomposing its execution into 
+parallel tasks does not provide a performance gain;  the standard auction algorithm provides a graph with multiple computationally 
+intensive tasks that can be parallelised. Later in the paper, we will use these examples to evaluate the performance of implementations
+of the framework. We use the double auctions example to measure a worst-case overhead of executing all building blocks of the framework 
+compared to an execution with a centralised trusted auctioneer, and we use the standard auctions example to show that the improvements of
+parallelisation can outweigh the added overhead when the execution time is dominated by computation.
+
+\subsubsection{Double Auction}
+\label{sec:instances-double-auction}
+Consider an auction where each provider has a limited bandwidth to be allocated to multiple users,
+and each user has a demand of bandwidth that may be satisfied by multiple providers.
+Both the users and the providers declare in their bids the value given to a unit
+of allocated bandwidth. An allocation gives the amount of bandwidth of each user
+allocated in each provider. We want to ensure truthfulness in expectation and budget balance.
+For this purpose, we use the algorithm $\A$ of~\cite{Zheng2014Star},
+which provides the above properties at the expense
+of social welfare. The idea is to order the providers by increasing
+value and to order the users by decreasing value.
+Then, users are allocated by their order to the providers using the water-filling method:
+the maximum amount of bandwidth of each user is allocated
+to the first available provider without exceeding its capacity,
+and any unsatisfied demand of that user is allocated to the following providers using the same method.
+Since the most computationally intensive task of this algorithm
+is sorting, in most practical settings there is no performance gain in parallelising the execution of $\A$.
+Instead, every provider executes $\A$ locally and outputs the result.
+Hence, we never need to invoke the data transfer building block.
+
+
+\subsubsection{Standard Auction}
+\label{sec:instances-vcg}
+
+%% ALGORITHM
+\begin{algorithm}[tbp]
+	\caption{Standard auction allocator}
+	\label{alg:bandwidth-allocation-randomised}
+	\small
+
+	\begin{algorithmic}[1]
+		\State Task 1: Calculate the allocation solution $x$
+		\For {Each subset $S$ of bidders in parallel}
+			\State Task 2.$S$: calculate payment $p_j$ of every $j \in S$
+		\EndFor
+		\State Task 3: Collect the outputs of each task with the data transfer and output $(x,\vec{p})$
+	\end{algorithmic}
+
+\end{algorithm}
+
+Consider a variation of the double auction where providers
+do not send bids and each bidder can only have its bandwidth demand
+allocated in a single provider. Here, we aim for truthfulness
+in expectation, maximal social welfare, and computational efficiency.
+It is well known that a VCG mechanism can be used to provide the first two guarantees.
+The difficulty is that determining the maximal
+social welfare is in general an NP Hard problem,
+which conflicts with the goal of computational efficiency.
+To address this issue, we use the algorithm of~\cite{Zhang2015Truthful}
+which adapts the VCG mechanism to achieve a tradeoff
+between the two conflicting requirements. Specifically,
+\cite{Zhang2015Truthful}~offers a $(1-\epsilon)$ approximation
+of maximal social welfare for an arbitrarily small $\epsilon$,
+while terminating in polynomial time according to smoothed analysis.
+
+Interestingly, the randomised algorithm proposed
+in~\cite{Zhang2015Truthful} has the potential for parallelisation.
+In a course manner, the algorithm can be divided into three steps, depicted
+in Algorithm\,\ref{alg:bandwidth-allocation-randomised}. The first
+step derives an approximately optimal allocation of users to providers.
+This step is hard to parallelise effectively in a distributed system,
+so we run it in a single sequential task.
+The second step calculates the payments for each user based on the result of the first step.
+This step is computationally intensive and the payments for each user can be computed
+independently and, therefore, can be easily parallelised.
+The final step gathers all intermediate results to produce the output.
+In our implementation, the first and third steps are executed by all providers.
+In the second step, we group the providers into $c$ groups, each containing at least $k+1$
+providers. Each group is assigned the computation of the payments
+of a subset of $n/c$ users. Then, all providers of a group
+execute the data transfer block to transfer the resulting payments to all providers.

@@ -1,0 +1,180 @@
+\section{System Model}
+\label{sec:model}
+We define the family of resource allocation auctions, the requirements of 
+a distributed simulation of the auctioneer, and the Game Theoretical model
+used to analyse simulations.
+
+\subsection{Resource Allocation Auctions}
+Consider a family of auctions with $m$ \emph{providers},
+$n$ \emph{users}, and an \emph{auctioneer}.
+Providers sell multiple resources with a limited capacity,
+in exchange for payments in some currency. Users are willing to pay
+to the providers in exchange for the allocation of a minimum amount 
+of each resource in the provider.
+The auctioneer defines an allocation between users and providers
+that is \emph{feasible} (i.e., that does not exceed 
+the capacity of each resource in any provider)
+and defines the payments to be made/received by the users/providers, respectively.
+Both users and providers attribute a utility to each allocation,
+which is a function of the value given to the allocation and the payments made/received.
+More precisely, each user $i$ has a valuation $v_i$ 
+specifying how much $i$ is willing to pay for the allocation
+of a unit of each resource in each provider;
+$i$'s utility is the difference between the total value
+attributed by $i$ to the allocation and the payments made by $i$.
+On the other hand, the valuation $v_j$ of a provider $j$
+specifies how much $j$ wants to be paid for allocating a unit of each resource;
+$j$'s utility is the difference between the payments received by $j$
+and the total value attributed by $j$ to the allocation.
+
+We will analyse two types of auctions: \emph{standard} and \emph{double}
+that differ only on who are the bidders (entities that submit bids).
+In a standard auction, only the users are bidders.
+Each user $i$ submits a bid $b_i$ to the auctioneer declaring $v_i$.
+Then, the auctioneer executes an algorithm $\A$ that
+returns a feasible allocation and the respective payments.
+The algorithm $\A$ must satisfy three properties: (1) it must maximise in expectation 
+the \emph{social welfare}, defined as the total value attributed by users to the allocation,
+(2) it must achieve \emph{truthfulness in expectation}, i.e.,
+no user may increase its expected utility by lying in its bid;
+and (3) it must be \emph{computationally efficient}.
+In a double auction, the auctioneer collects bids from both the users and the providers.
+The social welfare is now the
+difference between the total value of the users and the total 
+value of the providers. In addition to the above three
+properties, $\A$ should also satisfy
+\emph{budget balance}, which is the property that the total
+value paid by users covers the total payments made to the providers.
+Unfortunately, it was shown that no algorithm can simultaneously satisfy
+truthfulness in expectation, maximal social welfare, and budget balance\,\cite{Myerson:83}.
+In practice, it is common to aim at a combination between
+truthfulness in expectation and either one of the other two properties.
+
+\subsection{Distributed Auctioneer Simulation}
+In our setting, no single entity can be trusted with the role of the auctioneer,
+since every entity may increase its utility by manipulating the execution of $\A$.
+Specifically, a provider may devise a sub-optimal schedule
+that provides him with a higher payment; similarly, a bidder
+may manipulate the execution of $\A$ to decrease his payment.
+We address this problem by simulating the role of the auctioneer through a distributed protocol.
+The idea is to replicate the execution of $\A$ in multiple entities
+and use cross-validation of the results of the redundant computations.
+Providers are especially suited for this purpose, since they may be willing
+to offer their resources for the execution of $\A$ in exchange for payments.
+Therefore, we focus on distributed protocols executed among sets
+of providers that deviate from the protocol only if they gain by doing so.
+
+Now, we specify requirements for a correct simulation of the auctioneer.
+Normally, the auctioneer collects a vector $\vec{b}$
+of bids and executes $\A$ with input $\vec{b}$.
+In a simulation, each provider $j$ must collect a vector $\vec{b}^j$
+of bids sent to $j$ and use it as input of a distributed protocol
+that simulates $\A$. This requires bidders to submit a bid
+to all providers. We consider that bidders may adopt arbitrary behaviours
+such as submitting different bids to different providers or not submitting a bid.
+Nevertheless, we assume that every provider $j$
+eventually collects a vector $\vec{b}^j$ to be used as input in the simulation,
+containing a bid for every bidder $i$, and if $i$ is correct,
+then $j$ receives the bid of $i$ prior to the simulation.
+In practice, bidders are expected to submit their bids by some deadline;
+if a bidder fails to do so or sends an invalid bid,
+then the provider may use the special value $\bot$ instead.
+We want a simulation of the auctioneer to simulate $\A$ on some 
+input $\vec{b}$ that contains at least the bids sent by correct bidders,
+regardless of the bids of remaining bidders.
+
+More precisely, let $\A(x,\vec{p} \mid \vec{b})$ be the probability
+of algorithm $\A$ outputting an allocation $x$ and vector of payments $\vec{p}$,
+when executed on input $\vec{b}$ by a trusted auctioneer.
+We denote by $b_i^j$ be the bid submitted by
+bidder $i$ to provider $j$ in a simulation.
+Let $\vec{b}^j$ be the vector of all bids sent to $j$.
+If $i$ does not submit a valid bid to $j$, then we take $b_i^j$
+to be a neutral bid (i.e., a bid that excludes $i$ from the auction).
+In a simulation of the auctioneer, each provider $j$ inputs $\vec{b}^j$
+and outputs a pair $(x,\vec{p})$ composed by an allocation $x$
+and a vector of payments $\vec{p}$, or outputs a special value $\bot$
+that signals the abortion of the simulation.
+We say that the outcome is $(x,\vec{p})$ if all providers output this pair,
+otherwise, the outcome is $\bot$.
+We assume that an external mechanism guarantees that
+(1) when the outcome is $\bot$, the auction is aborted,
+and (2) when the outcome is $(x,\vec{p})$, the allocation $x$
+is enforced and all entities perform or receive their respective payments.
+We can now provide a precise definition of correct simulation.
+
+\begin{definition}
+A simulation is said to be correct if and only if,
+for all vectors $(\vec{b}^j)_j$, the outcome is $(x,\vec{p})$ with
+probability $\A(x,\vec{p} \mid \vec{b})$, where $\vec{b}$
+only contains valid bids and, for all bidders $i$ such that 
+$b_i^j = b_i'$ for every provider $j$, we have $b_i = b_i'$.
+\end{definition}
+
+\subsection{Game Theoretical Model}
+We consider the model of extensive form games played in 
+asynchronous systems proposed in~\cite{Abraham:13}.
+There are $m > 1$ players corresponding to the providers 
+of the resource allocation auction.
+Providers may form coalitions of size at most $k$. 
+We assume that each provider has a unique identifier,
+known to every other provider. Time is divided into turns.
+In each turn, some provider $j$ is chosen to move:
+$j$ first receives messages previously sent to $j$,
+performs some computation, and sends messages.
+A schedule specifies which provider moves at each turn
+and which messages it receives.
+We assume that communication channels are reliable,
+so every message sent is eventually delivered.
+We focus on schedules that are \emph{fair} in the sense
+that every provider $j$ is scheduled to move infinitely
+often, such that, for all turns $t$, there exists a turn $t'>t$
+when $j$ is scheduled to move. This is necessary to ensure progress.
+
+Now, we want to define a notion of equilibrium for this setting.
+For this, we need an exact definition of protocol and utility.
+A protocol specifies, for each schedule, a probability distribution over
+the computation performed by each provider $j$ and the messages sent at each turn where $j$ moves,
+as a function of the history of messages sent and received in previous turns.
+In addition, since we analyse protocols as modules with input and output values,
+the protocols also specify the values used as input and output by each provider.
+The utility of providers is a function of the outcome of the simulation:
+if the outcome is $\bot$, then the utility is $0$, else the
+utility is the difference between the payments received and the value of the allocation.
+Given this, the utility of a user $i$ is also $0$ if the outcome is $\bot$,
+or is the difference between the value of the allocation and the payments made.
+The expected utility conditioned on the schedule is
+computed according to the probability distribution over outcomes induced by the protocol.
+
+For the definition of equilibrium, we consider the notion of $k$-resilient 
+(ex post) equilibrium introduced in~\cite{Abraham:13}.
+This notion is a refinement of Nash equilibrium that incorporates
+collusion and asynchrony. Namely, collusion is modelled as sets $K$
+of at most $k$ providers that coordinate on any joint protocol;
+we require that no provider in $K$ can increase its expected utility
+if providers in $K$ deviate from the specified protocol,
+given that other providers do not deviate.
+Asynchrony is modelled in an ex post way by assuming that providers 
+are informed about the schedule when computing the expected utility.
+This is the strongest requirement for this setting.
+
+\begin{definition}
+A protocol $P$ is a $k$-resilient (ex post) equilibrium if and only if
+for all fair schedules and coalitions $K$ such that $|K| \le k$,
+there is no provider in $K$ that increases its expected utility
+when providers in $K$ follow a joint protocol $P' \ne P$,
+given that providers not in $K$ follow $P$.
+\end{definition}
+
+An important aspect of this definition is that a $k$-resilient
+equilibrium protocol $P$ satisfies the property that no provider increases
+its expected utility by lying about its input, hence $P$
+achieves \emph{truthfulness} regarding the inputs of the providers to a simulation.
+Specifically, at every invocation, we say that provider $j$ has input $v$
+if, by following $P$, $j$ is expected to input $v$, so truthfulness implies that $j$ 
+does not input $v' \ne v$.
+By the truthfulness of $\A$, every bidder $i$ maximises its expected utility
+by sending $b_i = v_i$ to all providers, regardless of other bids.
+This implies that to fulfil our goals it suffices to devise
+protocols that are $k$-resilient and correctly simulate the auctioneer.
+

@@ -1,0 +1,34 @@
+
+
+% Section: RELATED WORK
+\section{Related Work}
+\label{sec:related-work}
+
+A vast literature has addressed the problem of allocating resources
+between providers and users following an auction approach~\cite{Nisan2001, %Zhou2014 
+Zheng2014Star, Wang:12,Zhang:13, Popa2012, Niu2012,
+Shi:14,  Zhang:14, Zhang2015Truthful}.
+For instance, in~\cite{Zhang:14,Zhang2015Truthful}, the authors propose Vickrey–Clarke–Groves (VCG) mechanism~\cite{Nisan2001}
+in auctions where only the users submit bids to the auctioneer,
+achieving truthfulness and a tradeoff between maximal social welfare and computational efficiency;
+Zheng et al.~\cite{Zheng2014Star} propose a variant of the McAfee mechanism 
+to tackle a similar problem in a double auction (providers also submit bids),
+where they achieve truthfulness and budget balance.
+To the best of our knowledge, none of these works addressed these problems
+in the absence of a trusted auctioneer.
+
+The problem of simulating the behaviour of a trusted entity
+in an environment with only rational players has been approached
+in the literature of distributed systems\,\cite{Halpern:04,Abraham:06,Abraham:13,Afek:14}.
+In~\cite{Halpern:04,Abraham:06}, the authors addressed the
+particular problems of secret sharing and multiparty computation
+assuming the existence of a trusted mediator, and then studied
+conditions under which it is possible to simulate the mediator
+through a distributed protocol. Abraham et al.\,\cite{Abraham:13}
+devised $k$-resilient equilibria solutions for the problem of leader election.
+Afek et al.\,\cite{Afek:14} proposed a building blocks approach
+for devising distributed $k$-resilient implementations, and
+used this approach in combination with ideas from~\cite{Abraham:13}
+to address the problems of consensus and renaming.
+None of these works devised distributed protocols for simulating 
+the role of an auctioneer in an auction.

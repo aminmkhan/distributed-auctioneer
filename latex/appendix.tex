@@ -1,0 +1,115 @@
+
+% Section: APPENDIX
+
+\section*{Appendix}
+
+\subsection{Proof of Theorem~\ref{theorem:simulation}}
+\label{app:simulation}
+
+\begin{proof}
+First, we show that $P$ correctly simulates the auctioneer.
+Every provider $j$ inputs $\vec{b}^j$ to the bid agreement.
+By (1) of Property~\ref{prop:bid-agreement}, regardless of the inputs,
+all providers output the same vector $\vec{b}$
+that satisfies validity. By (1) of Property~\ref{prop:allocator},
+the outcome of the simulation is pair $(x,\vec{p})$
+with probability $\A(x,\vec{p} \mid \vec{b})$.
+This concludes the first step of the proof.
+
+Now, we show that $P$ is a $k$-resilient equilibrium for $m > f(k)$ for some $f$.
+Fix a coalition $K$. We take $f$ to be larger for all $k$ than the minimum value of $m$
+required by Properties~\ref{prop:bid-agreement} and~\ref{prop:allocator}.
+These properties imply that, if providers have preference for a solution
+at the bid agreement, then the implementations of bid agreement is $k$-resilient,
+so providers in $K$ prefer to follow $P$ for bid agreement.
+Since this guarantees that all providers have the same input at the
+allocator, the implementation of the allocator is also $k$-resilient,
+implying that $P$ is $k$-resilient.
+
+Now, we show that solution preference holds for both blocks.
+Recall that the outcome is not $\bot$ only if
+providers not in $K$ output the same pair,
+and, if the outcome is $\bot$, then the utility is $0$.
+Hence, providers in $K$ prefer (obtain an expected utility at least as high)
+that providers not in $K$ output the same pair $(x,\vec{p})$;
+in this case, they clearly prefer to output $(x,\vec{p})$ as well, thus they have preference
+for a solution at the allocator. Now, consider the bid agreement.
+The utility of an outcome of this block is the expected
+utility given that providers not in $K$ follow $P$ and providers in $K$
+follow an arbitrary protocol. Clearly, providers in $K$
+prefer that no provider in $K$ outputs $\bot$.
+By (3) of Property~\ref{prop:allocator}, providers in $K$
+prefer that all providers not in $K$ output the same vector.
+By (2) of Property~\ref{prop:allocator},
+providers in $K$ cannot increase the probability of any outcome of the framework 
+other than $\bot$ by deviating, thus, they cannot increase their expected utility by outputting
+a vector $\vec{b}' \neq \vec{b}$ at the bid agreement.
+This shows that providers have preference for a 
+solution at the bid agreement, concluding the proof.
+\end{proof}
+
+
+\subsection{Proof of Theorem~\ref{theorem:allocator}}
+\label{app:allocator}
+
+\begin{proof}
+We show that $P$ ensures (1) correct simulation of $\A$; (2) resilience to collusive influence;
+(3) input validation; and (4) $k$-resiliency for solution preference if all providers have the same input.
+First, we show (1). Suppose that all providers input the same vector $\vec{b}$
+and follow $P$. We show that every provider outputs the same pair $(x,\vec{p})$
+with probability $\A(x,\vec{p} \mid \vec{b})$. We show using induction that,
+if the decomposition of $\A$ into tasks is done correctly and we fix all random
+numbers, then at every task $T$ every provider $j$ that executes $T$ has the same output
+that he would have if $j$ executed $\A$ locally with the same random numbers.
+This is true for the first task by (2) of Property~\ref{prop:iv}. In the inductive step,
+the input at each task depends only on the output of a set of tasks.
+For each of those tasks $T$, by the induction hypothesis,
+a set $S$ of at least $k+1$ providers compute the 
+same result and input it to the data transfer;
+by (1) of Property~\ref{prop:data-transfer}, all providers that execute $T$
+receive that value and perform the same computation as they would if they were executing $\A$.
+This implies that all providers output the same pair at the end.
+By (1) of Property~\ref{prop:common-coin}, at every invocation
+of the common coin, all providers input the same distribution $\Pi$ and output the same random number
+distributed according to $\Pi$, where $\Pi$ is specified by $\A$. This proves (1).
+
+Now, we show (2). Fix a coalition $K$ and suppose that all providers 
+not in $K$ follow $P$ with input $\vec{b}$ and providers in $K$ follow an arbitrary $P' \ne P$.
+The only way that providers in $K$ could cause providers not in $K$
+to return pair $(x,\vec{p})$ with probability higher than $\A(x,\vec{p} \mid \vec{b})$
+is if the result of some task used in the input of another task or as the final output
+is not distributed as specified by $\A$ and $\vec{b}$.
+Since each task is executed by more than $k$ providers, 
+using an identical reasoning to the proof of (1), we can show using induction
+that providers in $K$ cannot manipulate the probability distribution over the results
+of each task, except only by increasing the probability of some provider 
+not in $K$ outputting $\bot$. Here, we use the fact that,
+by (3) of Property~\ref{prop:iv} and
+(2) of Properties~\ref{prop:common-coin},~\ref{prop:data-transfer},
+providers in $K$ cannot manipulate the probability distribution over
+outputs of the building blocks in a way that increases
+the expected utility of some provider in $K$. This proves (2).
+
+Condition (3) follows by (2) of Property~\ref{prop:iv}.
+To show (4), we first need to prove that providers have preference for a solution at all invocations
+of building blocks, assuming that they have preference for a solution of the allocator.
+Fix a coalition $K$. It is clear that providers in $K$ prefer that providers not in $K$
+do not output $\bot$ at all invocations. Now, we use backwards induction to show
+that they prefer that providers not in $K$ never return different values.
+In the last invocation, this is clearly true by preference for a solution of the allocator.
+Continuing backwards, if two providers not in $K$ output different values
+at the same invocation of some block, then either they output different pairs at the end or 
+input different values at the following invocation of the data transfer,
+which by the hypothesis is never preferable to outputting the same value at the considered invocation.
+By the proof of (2), providers in $K$ cannot manipulate the final outcome
+by not outputting the same values at all invocations, so
+they also prefer to output the same values as providers not in $K$,
+showing solution preference at all invocations. This also shows that
+providers prefer to have the same input at all invocations.
+Thus, given that all providers have the same input,
+no provider in $K$ can increase its expected utility
+if some provider $j \in K$ does not compute each task correctly.
+By (3) of Property~\ref{prop:iv} and 
+(2) of Properties~\ref{prop:common-coin} and~\ref{prop:data-transfer},
+$P$ is a $k$-resilient equilibrium.
+\end{proof}
