@@ -1,12 +1,14 @@
 A Distributed Auctioneer for Resource Allocation in Decentralized Systems
 ================================
 
+[Full-Text PDF](paper/Khan2016_Distributed_Auctioneer.pdf)
+
 ### Authors
 
-* Amin M. Khan
-* Xavier Vilaça
-* Luís Rodrigues
-* Felix Freitag
+* [Amin M. Khan](http://aminmkhan.com/)
+* [Xavier Vilaça](http://homepages.gsd.inesc-id.pt/~xvilaca/)
+* [Luís Rodrigues](http://www.gsd.inesc-id.pt/~ler/)
+* [Felix Freitag](http://people.ac.upc.edu/felix/)
 
 ### Conference
 [36th IEEE International Conference on Distributed Computing Systems (ICDCS 2016)](http://www-higashi.ist.osaka-u.ac.jp/icdcs2016/). Nara, Japan. 27-30 June 2016.
